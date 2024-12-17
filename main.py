@@ -2,7 +2,7 @@ from random import choice
 
 from settings import *
 from lib.helpers import *
-from lib.monsters import Monster, Opponent
+from lib.monsters import Player, Opponent
 from lib.timer import Timer
 
 class Game:
@@ -20,7 +20,7 @@ class Game:
         # data
         # player
         player_monster_list = [ "Sparchu", "Cleaf", "Jacana"] # static data for testing
-        self.player_monsters = [Monster(x, self.back_surfaces[x]) for x in player_monster_list]
+        self.player_monsters = [Player(x, self.back_surfaces[x]) for x in player_monster_list]
         self.monster = self.player_monsters[0]
         self.all_sprites.add(self.monster)
 
