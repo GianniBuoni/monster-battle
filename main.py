@@ -33,6 +33,11 @@ class Game:
         self.front_surfaces = folder_importer("images", "front")
         self.bg_surfaces = folder_importer("images", "other")
 
+    def draw_floor(self):
+        for sprite in self.all_sprites:
+            floor_rect = self.bg_surfaces["floor"].get_frect(center = sprite.rect.midbottom + pygame.Vector2(0,-10))
+            self.display_surface.blit(self.bg_surfaces["floor"], floor_rect)
+
     def run(self):
         while self.running:
             dt = self.clock.tick() / 1000
@@ -45,6 +50,7 @@ class Game:
 
             # draw  
             self.display_surface.blit(self.bg_surfaces["bg"], (0,0))
+            self.draw_floor()
             self.all_sprites.draw(self.display_surface)
             pygame.display.update()
         
