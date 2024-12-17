@@ -1,6 +1,8 @@
+from random import choice
+
 from settings import *
 from lib.helpers import *
-from lib.monsters import Monster
+from lib.monsters import Monster, Opponent
 from lib.timer import Timer
 
 class Game:
@@ -16,13 +18,19 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
 
         # data
+        # player
         player_monster_list = [ "Sparchu", "Cleaf", "Jacana"] # static data for testing
         self.player_monsters = [Monster(x, self.back_surfaces[x]) for x in player_monster_list]
         self.monster = self.player_monsters[0]
         self.all_sprites.add(self.monster)
 
+        # opponent
+        opponent_name = choice(list(MONSTER_DATA.keys()))
+        self.opponent = Opponent(opponent_name, self.front_surfaces[opponent_name], self.all_sprites)
+
     def import_assets(self):
         self.back_surfaces = folder_importer("images", "back")
+        self.front_surfaces = folder_importer("images", "front")
         self.bg_surfaces = folder_importer("images", "other")
 
     def run(self):
