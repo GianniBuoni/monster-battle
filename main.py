@@ -20,7 +20,7 @@ class Game:
 
         # data
         # player
-        player_monster_list = [ "Sparchu", "Cleaf", "Jacana"] # static data for testing
+        player_monster_list = [ "Sparchu", "Cleaf", "Jacana", "Gulfin", "Pouch", "Larvea"] # static data for testing
         self.player_monsters = [Player(x, self.back_surfaces[x]) for x in player_monster_list]
         self.monster = self.player_monsters[0]
         self.all_sprites.add(self.monster)
@@ -30,7 +30,7 @@ class Game:
         self.opponent = Opponent(opponent_name, self.front_surfaces[opponent_name], self.all_sprites)
 
         # ui
-        self.ui = UI(self.monster)
+        self.ui = UI(self.monster, self.player_monsters)
 
     def import_assets(self):
         self.back_surfaces = folder_importer("images", "back")

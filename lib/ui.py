@@ -1,18 +1,20 @@
 from settings import *
 
 class UI():
-    def __init__(self, monster) -> None:
+    def __init__(self, current_monster, player_monsters) -> None:
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font(None, 30)
         self.left = WINDOW_WIDTH / 2
         self.top = WINDOW_HEIGHT / 2 + 100
-        self.monster = monster
+        self.monster = current_monster
+        self.player_monsters = player_monsters
 
         # control
         self.general_options = ["attack", "heal", "switch", "escape"]
         self.general_idx = {"row": 0, "col": 0}
         self.attack_idx = {"row": 0, "col": 0}
         self.state = "general"
+        self.visible_monsters = 4
 
         # grid
         self.rows, self.cols = 2, 2
@@ -44,7 +46,7 @@ class UI():
         pygame.draw.rect(self.display_surface, "white", rect, 0, 4)
         pygame.draw.rect(self.display_surface, COLORS["gray"], rect, 4, 4)
 
-        # menu
+        # menu options
         for col in range(self.cols):
             for row in range(self.rows):
                 x = rect.left + (rect.width / (self.cols * 2)) + (rect.width / self.cols) * col
@@ -56,6 +58,25 @@ class UI():
                 text_rect = text_surface.get_frect(center = (x, y))
                 self.display_surface.blit(text_surface, text_rect)
 
+    def switch(self):
+        rect = pygame.FRect(self.left, self.top - 200, 400, 400)
+        pygame.draw.rect(self.display_surface, "white", rect, 0, 4)
+        pygame.draw.rect(self.display_surface, COLORS["gray"], rect, 4, 4)
+
+        # menu options
+        for i in range(len(self.player_monsters)):
+            x = rect.centerx 
+            y = (
+                rect.top + rect.height / (self.visible_monsters * 2) # get center of first division
+                + (rect.height / self.visible_monsters * i) # add iteration of next division
+            )
+
+            name = self.player_monsters[i].name
+            text_surface = self.font.render(name, True, 'black')
+            text_rect = text_surface.get_frect(center =  (x, y))
+            if rect.collidepoint(text_rect.center):
+                self.display_surface.blit(text_surface, text_rect)
+
     def update(self):
         self.input()
 
@@ -63,3 +84,4 @@ class UI():
         match self.state:
             case "general": self.quad_select(self.general_idx, self.general_options)
             case "attack": self.quad_select(self.attack_idx, self.monster.abilities)
+            case "switch": self.switch()
