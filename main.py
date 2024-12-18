@@ -3,6 +3,7 @@ from random import choice
 from settings import *
 from lib.helpers import *
 from lib.monsters import Player, Opponent
+from lib.ui import UI
 from lib.timer import Timer
 
 class Game:
@@ -28,6 +29,9 @@ class Game:
         opponent_name = choice(list(MONSTER_DATA.keys()))
         self.opponent = Opponent(opponent_name, self.front_surfaces[opponent_name], self.all_sprites)
 
+        # ui
+        self.ui = UI(self.monster)
+
     def import_assets(self):
         self.back_surfaces = folder_importer("images", "back")
         self.front_surfaces = folder_importer("images", "front")
@@ -52,6 +56,7 @@ class Game:
             self.display_surface.blit(self.bg_surfaces["bg"], (0,0))
             self.draw_floor()
             self.all_sprites.draw(self.display_surface)
+            self.ui.draw()
             pygame.display.update()
         
         pygame.quit()
