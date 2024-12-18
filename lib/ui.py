@@ -8,6 +8,11 @@ class UI():
         self.top = WINDOW_HEIGHT / 2 + 100
         self.monster = current_monster
         self.player_monsters = player_monsters
+        self.available_monsters = [
+            x for x in self.player_monsters
+            if x != self.monster
+            and x.health > 0
+        ]
 
         # control
         self.general_options = ["attack", "heal", "switch", "escape"]
@@ -40,7 +45,7 @@ class UI():
                     self.state = self.general_options[self.general_idx["col"] * 2 + self.general_idx["row"]]
                     print(self.state)
             case "switch":
-                self.switch_idx = (self.switch_idx + int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])) % self.visible_monsters
+                self.switch_idx = (self.switch_idx + int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])) % len(self.available_monsters)
         # attack menu input needed
 
     def quad_select(self, idx, options):
@@ -67,14 +72,18 @@ class UI():
         pygame.draw.rect(self.display_surface, COLORS["gray"], rect, 4, 4)
 
         # menu options
-        for i in range(len(self.player_monsters)):
+        y_offset = (
+            0 if self.switch_idx < self.visible_monsters
+            else -(self.switch_idx - self.visible_monsters + 1) * rect.height /self.visible_monsters
+        )
+        for i in range(len(self.available_monsters)):
             x = rect.centerx 
             y = (
-                rect.top + rect.height / (self.visible_monsters * 2) # get center of first division
+                rect.top + rect.height / (self.visible_monsters * 2) + y_offset # get center of first division
                 + (rect.height / self.visible_monsters * i) # add iteration of next division
             )
 
-            name = self.player_monsters[i].name
+            name = self.available_monsters[i].name
             color = "black" if i == self.switch_idx else COLORS["gray"]
             text_surface = self.font.render(name, True, color)
 
