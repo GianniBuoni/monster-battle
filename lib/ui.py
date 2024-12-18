@@ -1,7 +1,7 @@
 from settings import *
 
 class UI():
-    def __init__(self, current_monster, player_monsters) -> None:
+    def __init__(self, current_monster, player_monsters, icon_surfaces) -> None:
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font(None, 30)
         self.left = WINDOW_WIDTH / 2
@@ -24,6 +24,9 @@ class UI():
 
         # grid
         self.rows, self.cols = 2, 2
+
+        # icon_surfaces
+        self.icon_surfaces: dict = icon_surfaces
 
     def input(self):
         keys = pygame.key.get_just_pressed()
@@ -84,12 +87,16 @@ class UI():
             )
 
             name = self.available_monsters[i].name
+            
             color = "black" if i == self.switch_idx else COLORS["gray"]
             text_surface = self.font.render(name, True, color)
+            icon_surface = self.icon_surfaces[name]
 
-            text_rect = text_surface.get_frect(center =  (x, y))
+            text_rect = text_surface.get_frect(midleft =  (x, y))
+            icon_rect = icon_surface.get_frect(midright = (x - 50, y))
             if rect.collidepoint(text_rect.center):
                 self.display_surface.blit(text_surface, text_rect)
+                self.display_surface.blit(icon_surface, icon_rect)
 
     def update(self):
         self.input()

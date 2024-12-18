@@ -30,12 +30,13 @@ class Game:
         self.opponent = Opponent(opponent_name, self.front_surfaces[opponent_name], self.all_sprites)
 
         # ui
-        self.ui = UI(self.monster, self.player_monsters)
+        self.ui = UI(self.monster, self.player_monsters, self.monster_icon_surfaces)
 
     def import_assets(self):
         self.back_surfaces = folder_importer("images", "back")
         self.front_surfaces = folder_importer("images", "front")
         self.bg_surfaces = folder_importer("images", "other")
+        self.monster_icon_surfaces = folder_importer("images", "simple")
 
     def draw_floor(self):
         for sprite in self.all_sprites:
