@@ -5,7 +5,7 @@ class Monster():
     def get_data(self, name):
         self.element = MONSTER_DATA[name]["element"]
         self.health = self.max_health = MONSTER_DATA[name]["health"]
-        self.abilites = sample(list(ABILITIES_DATA.keys()), 4)
+        self.abilities = sample(list(ABILITIES_DATA.keys()), 4)
         self.name = name
 
 class Player(pygame.sprite.Sprite, Monster):
