@@ -13,6 +13,7 @@ class UI():
         self.general_options = ["attack", "heal", "switch", "escape"]
         self.general_idx = {"row": 0, "col": 0}
         self.attack_idx = {"row": 0, "col": 0}
+        self.switch_idx = 0
         self.state = "general"
         self.visible_monsters = 4
 
@@ -21,24 +22,26 @@ class UI():
 
     def input(self):
         keys = pygame.key.get_just_pressed()
-        self.general_idx["row"] = (
-            (self.general_idx["row"]
-            + int(keys[pygame.K_DOWN])
-            - int(keys[pygame.K_UP]))
-            % self.rows
-        )
-        self.general_idx["col"] = (
-            (self.general_idx["col"]
-            + int(keys[pygame.K_RIGHT])
-            - int(keys[pygame.K_LEFT]))
-            % self.cols
-        )
-
+        match self.state:
+            case "general":
+                self.general_idx["row"] = (
+                    (self.general_idx["row"]
+                    + int(keys[pygame.K_DOWN])
+                    - int(keys[pygame.K_UP]))
+                    % self.rows
+                )
+                self.general_idx["col"] = (
+                    (self.general_idx["col"]
+                    + int(keys[pygame.K_RIGHT])
+                    - int(keys[pygame.K_LEFT]))
+                    % self.cols
+                )
+                if keys[pygame.K_SPACE]:
+                    self.state = self.general_options[self.general_idx["col"] * 2 + self.general_idx["row"]]
+                    print(self.state)
+            case "switch":
+                self.switch_idx = (self.switch_idx + int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])) % self.visible_monsters
         # attack menu input needed
-
-        if keys[pygame.K_SPACE]:
-            self.state = self.general_options[self.general_idx["col"] * 2 + self.general_idx["row"]]
-            print(self.state)
 
     def quad_select(self, idx, options):
         # bg
@@ -72,7 +75,9 @@ class UI():
             )
 
             name = self.player_monsters[i].name
-            text_surface = self.font.render(name, True, 'black')
+            color = "black" if i == self.switch_idx else COLORS["gray"]
+            text_surface = self.font.render(name, True, color)
+
             text_rect = text_surface.get_frect(center =  (x, y))
             if rect.collidepoint(text_rect.center):
                 self.display_surface.blit(text_surface, text_rect)
